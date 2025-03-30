@@ -102,5 +102,5 @@ export async function PATCH(req: Request) {
     console.error("Error saat mengupdate transaksi:", error);
     return NextResponse.json({ error: "Gagal mengupdate transaksi" }, { status: 500 });
   }
-  (".ll,");
+
 }
