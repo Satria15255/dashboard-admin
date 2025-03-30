@@ -1,0 +1,13 @@
+{
+  "build": {
+    "env": {
+      "DATABASE_URL": "mysql://root:TmuBBQILMYDJhsgBiCVVYeIWalXByJIK@turntable.proxy.rlwy.net:36745/railway"
+    }
+  },
+  "routes": [],
+  "functions": {
+    "api/*.ts": {
+      "includeFiles": "node_modules/.prisma/**"
+    }
+  }
+}
