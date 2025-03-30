@@ -1,17 +1,17 @@
 import { useState } from "react";
 
 interface Transaction {
-  id: number;
+  id?: number;
   name: string;
-  amount: string;
+  amount: number;
   status: string;
   date: string; // Format tanggal string (YYYY-MM-DD)
 }
 
-const EditTransactionForm = ({ transaction, onSave, onCancel }: { transaction: Transaction; onSave: any; onCancel: any }) => {
+const EditTransactionForm = ({ transaction, onSave, onCancel }: { transaction: Transaction; onSave: (id: number, data: Omit<Transaction, "id">) => void; onCancel: () => void }) => {
   const [formData, setFormData] = useState({
     name: transaction.name,
-    amount: transaction.amount,
+    amount: String(transaction.amount),
     status: transaction.status,
     date: transaction.date.split("T")[0], // Pastikan format tanggal sesuai
   });
@@ -22,7 +22,7 @@ const EditTransactionForm = ({ transaction, onSave, onCancel }: { transaction: T
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSave(transaction.id, { ...formData, amount: Number(formData.amount) });
+    onSave(transaction.id!, { ...formData, amount: Number(formData.amount) });
   };
 
   return (

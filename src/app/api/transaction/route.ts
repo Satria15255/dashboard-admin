@@ -10,7 +10,7 @@ export async function GET() {
     const transactions = await prisma.transaction.findMany();
     return NextResponse.json(transactions, { status: 200 });
   } catch (error) {
-    return NextResponse.json({ error: "Gagal mengambil data" }, { status: 500 });
+    console.log(error);
   }
 }
 
@@ -49,8 +49,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json(newTransaction, { status: 201 });
   } catch (error) {
-    console.error("Error saving transaction:", error); // ❌ Debug error
-    return NextResponse.json({ error: "Gagal menambahkan transaksi", details: error }, { status: 500 });
+    console.error("Error saving transaction:", error);
   }
 }
 
@@ -71,7 +70,6 @@ export async function DELETE(req: Request) {
     return NextResponse.json({ message: "Transaksi berhasil dihapus", deletedTransaction }, { status: 200 });
   } catch (error) {
     console.error("Error saat menghapus transaksi:", error);
-    return NextResponse.json({ error: "Gagal menghapus transaksi" }, { status: 500 });
   }
 }
 
@@ -100,7 +98,5 @@ export async function PATCH(req: Request) {
     return NextResponse.json({ message: "Transaksi berhasil diperbarui", updatedTransaction }, { status: 200 });
   } catch (error) {
     console.error("Error saat mengupdate transaksi:", error);
-    return NextResponse.json({ error: "Gagal mengupdate transaksi" }, { status: 500 });
   }
-
 }

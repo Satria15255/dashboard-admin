@@ -2,21 +2,38 @@
 
 import { useState } from "react";
 
-export default function AddTransactionsForm({ onAdd }: { onAdd: (transaction: any) => void }) {
-  const [formData, setFormData] = useState({
+interface Transaction {
+  id?: number; // Opsional karena akan dibuat di backend
+  name: string;
+  amount: number;
+  status: "Pending" | "Completed" | "Failed";
+  date: string;
+}
+
+export default function AddTransactionsForm({ onAdd }: { onAdd: (transaction: Transaction) => void }) {
+  const [formData, setFormData] = useState<{
+    name: string;
+    amount: number;
+    status: "Pending" | "Completed" | "Failed";
+    date: string;
+  }>({
     name: "",
-    amount: "",
-    status: "Pending",
+    amount: 0,
+    status: "Pending", // Pastikan sesuai dengan tipe yang diizinkan
     date: new Date().toISOString().split("T")[0],
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: name === "amount" ? Number(value) : (value as "Pending" | "Completed" | "Failed"), // Konversi hanya jika name === "amount"
+    }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const newTransaction = { ...formData, amount: Number(formData.amount) };
+    const newTransaction: Partial<Transaction> = { ...formData, amount: Number(formData.amount) };
 
     console.log("Sending Data:", newTransaction); // Debugging
     try {
@@ -30,7 +47,7 @@ export default function AddTransactionsForm({ onAdd }: { onAdd: (transaction: an
 
       const data = await res.json();
       onAdd(data);
-      setFormData({ name: "", amount: "", status: "Pending", date: new Date().toISOString().split("T")[0] });
+      setFormData({ name: "", amount: 0, status: "Pending", date: new Date().toISOString().split("T")[0] });
     } catch (error) {
       console.error(error);
     }
@@ -39,7 +56,7 @@ export default function AddTransactionsForm({ onAdd }: { onAdd: (transaction: an
   return (
     <form onSubmit={handleSubmit} className="mb-4">
       <input type="text" name="name" placeholder="Transaction Name" value={formData.name} onChange={handleChange} required className="border p-2 mr-2" />
-      <input type="text" name="amount" placeholder="Amount" value={formData.amount} onChange={handleChange} required className="border p-2 mr-2" />
+      <input type="number" name="amount" placeholder="Amount" value={formData.amount} onChange={handleChange} required className="border p-2 mr-2" min="0" />
       <select name="status" value={formData.status} onChange={handleChange} className="border p-2 mr-2">
         <option value="Pending">Pending</option>
         <option value="Completed">Completed</option>

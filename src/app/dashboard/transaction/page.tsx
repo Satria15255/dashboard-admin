@@ -5,9 +5,9 @@ import AddTransactionsForm from "../transaction/AddTransactionsForm";
 import EditTransactionForm from "../transaction/EditTransactionForm";
 
 type Transaction = {
-  id: number;
+  id?: number;
   name: string;
-  amount: string;
+  amount: number;
   status: string;
   date: string;
 };
@@ -59,8 +59,8 @@ export default function TransactionsTable() {
     }
   };
 
-  const addTransaction = (transaction: { name: string; amount: string; status: string; date: string }) => {
-    setTransactions((prev) => [...prev, { id: prev.length ? prev[prev.length - 1].id + 1 : 1, ...transaction }]);
+  const addTransaction = (transaction: Transaction) => {
+    setTransactions((prev) => [...prev, transaction]);
   };
 
   const updateTransaction = async (id: number, updatedData: Partial<Transaction>) => {
@@ -112,7 +112,7 @@ export default function TransactionsTable() {
                 <td className={`px-4 py-2 font-semibold ${transaction.status === "Completed" ? "text-green-500" : transaction.status === "Pending" ? "text-yellow-500" : "text-red-500"}`}>{transaction.status}</td>
                 <td className="px-4 py-2">{transaction.date}</td>
                 <td className="px-4 py-2">
-                  <button onClick={() => deleteTransaction(transaction.id)} className="bg-red-500 text-white px-2 py-1 rounded">
+                  <button onClick={() => deleteTransaction(transaction.id!)} className="bg-red-500 text-white px-2 py-1 rounded">
                     Delete
                   </button>
                   <button onClick={() => setSelectedTransaction(transaction)} className="bg-blue-500 text-white px-2 py-1 rounded ml-2">
